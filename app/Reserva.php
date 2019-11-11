@@ -22,7 +22,7 @@ class Reserva extends Model
     }
 
     public function quartos(){
-        return $this->hasMany('App\Quarto');
+        return $this->belongsToMany('App\Quarto');
     }
 
 }

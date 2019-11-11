@@ -30,7 +30,7 @@ class ReservaController extends Controller
         $quartos = Quarto::all();
 
         for ($i=0; $i < sizeof($quartos); $i++) {
-            //$quartos = Quarto::where('id','=',$reservas[$i]->quarto_id)->first();
+
             if($quartos[$i]->statusDisponibilidade == 0){
                 $quartos[$i]->statusDisponibilidade = "Disponível";
             }else{
