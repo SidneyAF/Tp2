@@ -1,4 +1,4 @@
-@extends('master')
+@extends('layouts.master')
 @section('titulo','ESCREVA SEU TITULO')
 @section('conteudo')
   <form method="post" action="/NOMEDAMODEL/{{$aluno->id}}">

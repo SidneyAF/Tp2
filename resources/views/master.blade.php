@@ -7,3 +7,4 @@
   @yield('conteudo')
 </body>
 </html>
+

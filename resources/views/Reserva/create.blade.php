@@ -1,6 +1,15 @@
-@extends('master')
+@extends('layouts.master')
 @section('titulo','Reserva')
 @section('conteudo')
+  
+<div class="container mtb">
+  <div class="row">
+      <div class="col-lg-8">
+        <h4>RESERVE SUA HOSPEDAGEM</h4>
+        <div class="hline"></div>
+        <p>Reserve hotéis pela metade do preço. Ganhe diárias grátis onde quiser! Ofertas exclusivas. Avaliações dos hóspedes. Ganhe recompensas. Hotéis de luxo. Fotos e avaliações.</p>
+
+<div class="row">
   <form method="POST" action="/Reserva">
   @csrf
   <dl>
@@ -39,9 +48,11 @@
       <dt>Data de saída</dt>
       <dd><input type="date" name="checkout"></dd>
     </div>
-    <br>
-    <h2>Preço total:</h2> 
   </dl>
-  <input type="submit" value="Reservar" >
-  </form>
+  <input class="btn btn-primary" type="submit" value="Reservar" >
+  </div>
+  </div>
+  </div>
+</div>
 @endsection
+
