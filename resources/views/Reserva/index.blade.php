@@ -1,8 +1,30 @@
-@extends('master')
+@extends('layouts.master')
 @section('titulo','Bem vindo !')
 @section('conteudo')
-  @foreach($reservas as $a)
-  {{$a}}
+
+
+<div class="container mtb">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Quarto</th>
+      <th scope="col">Preço</th>
+      <th scope="col">Disponibilidade</th>
+    </tr>
+  </thead>
+  @foreach($quartos as $a)
+  <tbody>
+    <tr>
+      <td>{{$a->categoria}}</td>
+      <td>{{$a->preco}}</td>
+      <td>{{$a->statusDisponibilidade}}</td>
+    </tr>
+  </tbody>
   @endforeach
-  <h3><a href="/Reserva/create">Fazer reserva</a></h3>
+</table>
+<br>
+
+<a href="/Reserva/create" class="btn btn-theme">NOVA RESERVA</a>
+</div>
+
 @endsection

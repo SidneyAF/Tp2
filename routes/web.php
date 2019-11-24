@@ -17,3 +17,7 @@ Route::get('/', function () {
 
 Route::resource('Reserva','ReservaController');;
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

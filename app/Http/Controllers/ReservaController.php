@@ -6,6 +6,8 @@ use App\Reserva;
 use App\Quarto;
 use App\Pacote;
 use App\Hospede;
+use App\Http\Requests\ReservaRequest;
+use App\ReservaQuarto;
 use Illuminate\Http\Request;
 
 class ReservaController extends Controller
@@ -15,24 +17,27 @@ class ReservaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct(Request $request)
+    {
+        $this->middleware('auth', ['except' => ['index']]);
+    }
+
+
     public function index()
     {
         $reservas = Reserva::all();
-        $aux = [];
+        $quartos = Quarto::all();
 
-        for ($i=0; $i < sizeof($reservas); $i++) {
-            $quarto = Quarto::where('id','=',$reservas[$i]->quarto_id)->first();
-            if($quarto->statusDisponibilidade == 1){
-                $status = "Reservado";
+        for ($i=0; $i < sizeof($quartos); $i++) {
+
+            if($quartos[$i]->statusDisponibilidade == 0){
+                $quartos[$i]->statusDisponibilidade = "Disponível";
             }else{
-                $status = "Disponível";
+                $quartos[$i]->statusDisponibilidade = "Reservado";
             };
-            $t = array('Quarto'=>$quarto->categoria,'Disponibilidade'=>$status);
-            $a = array_push($aux,$t);
         }
-
-        echo $aux[0]['Quarto'];
-        return view('Reserva.index')->with('reservas', $reservas);
+        return view('Reserva.index')->with('quartos', $quartos);
     }
 
     /**
@@ -54,11 +59,11 @@ class ReservaController extends Controller
      */
 
 
-    public function store(Request $request)
-    {
+    public function store(ReservaRequest $request)
+    {   
+        
         Hospede::create(['nome'=>$request->nome, 'idade'=>$request->idade, 'rg'=>$request->rg, 'telefone'=>$request->telefone]);
-        //$hospede = Hospede::where('nome','=',$request->nome )->first();
-
+        
         $precoQuarto = Quarto::where('id','=',$request->quartos)->first();
         $precoQuarto = $precoQuarto->preco;
 
@@ -73,7 +78,20 @@ class ReservaController extends Controller
         $precoTotal = ($precoQuarto + $precoPacote) * $quatidadeDias;
 
         Reserva::create(['checkin'=>$request->checkin,'checkout'=>$request->checkout,'status'=>'Reservado','precoTotal'=>$precoTotal,'funcionario_id'=>'1','quarto_id'=>$request->quartos,'quantidadePessoas'=>$request->qtdPessoas,'pacote_id'=>$request->pacotes]);
-       // return redirect('Reserva');
+
+        $reservaId = Reserva::all();
+        $reservaId = $reservaId[sizeof($reservaId)-1]->id;
+
+        ReservaQuarto::create(['reserva_id'=>$reservaId,'quarto_id'=>$request->quartos]);
+
+        $statusQuarto = Quarto::find($request->quartos);
+
+        $statusQuarto->statusDisponibilidade = 1;
+
+        $statusQuarto->save();
+        
+        echo "<script>alert('Reserva efetuada ! Preço total:$precoTotal');</script>";
+        echo "<script>window.location.href='/Reserva'</script>";
     }
 
 
