@@ -18,6 +18,20 @@ class ReservaController extends Controller
     public function index()
     {
         $reservas = Reserva::all();
+        $aux = [];
+
+        for ($i=0; $i < sizeof($reservas); $i++) {
+            $quarto = Quarto::where('id','=',$reservas[$i]->quarto_id)->first();
+            if($quarto->statusDisponibilidade == 1){
+                $status = "Reservado";
+            }else{
+                $status = "Disponível";
+            };
+            $t = array('Quarto'=>$quarto->categoria,'Disponibilidade'=>$status);
+            $a = array_push($aux,$t);
+        }
+
+        echo $aux[0]['Quarto'];
         return view('Reserva.index')->with('reservas', $reservas);
     }
 
@@ -44,8 +58,21 @@ class ReservaController extends Controller
     {
         Hospede::create(['nome'=>$request->nome, 'idade'=>$request->idade, 'rg'=>$request->rg, 'telefone'=>$request->telefone]);
         //$hospede = Hospede::where('nome','=',$request->nome )->first();
-        $preco = "500";
-        Reserva::create(['checkin'=>$request->checkin,'checkout'=>$request->checkout,'status'=>'Reservado','precoTotal'=>$t,'funcionario_id'=>'1','quarto_id'=>$request->quartos,'quantidadePessoas'=>$request->qtdPessoas,'pacote_id'=>$request->pacotes]);
+
+        $precoQuarto = Quarto::where('id','=',$request->quartos)->first();
+        $precoQuarto = $precoQuarto->preco;
+
+        $precoPacote = Pacote::where('id','=',$request->pacotes)->first();
+        $precoPacote = $precoPacote->custoAdicional;
+
+        $checkin = date_create($request->checkin);
+        $checkout = date_create($request->checkout);
+
+        $quatidadeDias = date_diff($checkin, $checkout);
+        $quatidadeDias = date_interval_format($quatidadeDias ,'%a');
+        $precoTotal = ($precoQuarto + $precoPacote) * $quatidadeDias;
+
+        Reserva::create(['checkin'=>$request->checkin,'checkout'=>$request->checkout,'status'=>'Reservado','precoTotal'=>$precoTotal,'funcionario_id'=>'1','quarto_id'=>$request->quartos,'quantidadePessoas'=>$request->qtdPessoas,'pacote_id'=>$request->pacotes]);
        // return redirect('Reserva');
     }
 
