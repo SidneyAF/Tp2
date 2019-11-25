@@ -10,8 +10,11 @@ class Hospede extends Model
     public $timestamps=false;
 
     public function reserva(){
-		return $this->belongsTo('App\Reserva');
+		  return $this->belongsTo('App\Reserva');
     }
 
+    public function status(){
+		  return $this->belongsTo('App\statusHospede');
+    }
     
 }

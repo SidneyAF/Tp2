@@ -19,6 +19,8 @@ class CreateHospedesTable extends Migration
             $table->string('idade',3);
             $table->string('rg',15);
             $table->string('telefone',15);
+            $table->integer('statusHospede')->unsigned();
+            $table->foreign('statusHospede')->references('id')->on('status_hospedes');
             //$table->timestamps();
         });
     }

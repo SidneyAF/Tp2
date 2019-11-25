@@ -25,6 +25,7 @@
 <br>
 
 <a href="/Reserva/create" class="btn btn-theme">NOVA RESERVA</a>
+<a href="statusHospede" class="btn btn-theme">HOSPEDES</a>
 </div>
 
 @endsection

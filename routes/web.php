@@ -15,9 +15,11 @@ Route::get('/', function () {
     return view('Reserva.index');
 });
 
-Route::resource('Reserva','ReservaController');;
-
+Route::resource('Reserva','ReservaController');
+Route::resource('statusHospede','StatusHospedeController');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
